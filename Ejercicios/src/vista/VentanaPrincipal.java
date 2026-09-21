@@ -4,13 +4,20 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import modelo.Partido;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.border.BevelBorder;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -23,22 +30,11 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField textFieldLugar;
 	private JTextField textFieldFecha;
 	private JTable table;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPrincipal frame = new VentanaPrincipal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private DefaultTableModel modeloTabla;
+	private JButton btnCargar;
+	private JButton btnGuardar;
+	private JButton btnAnadir;
+	
 
 	/**
 	 * Create the frame.
@@ -47,7 +43,7 @@ public class VentanaPrincipal extends JFrame {
 		setResizable(false);
 		setTitle("TextoBinario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 456);
+		setBounds(100, 100, 667, 456);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -107,25 +103,93 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(textFieldFecha);
 		textFieldFecha.setColumns(10);
 		
-		JButton btnAnadir = new JButton("Añadir");
-		btnAnadir.setBounds(21, 227, 89, 23);
-		contentPane.add(btnAnadir);
 		
-		JButton btnCargar = new JButton("Cargar");
-		btnCargar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnCargar.setBounds(153, 227, 89, 23);
-		contentPane.add(btnCargar);
+		String [] col = {"Equipo Local", "Equipo Visitante","Goles Local","Goles Visitante","Lugar","Fecha"};
+		modeloTabla = new DefaultTableModel(col, 0);
 		
-		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(283, 227, 89, 23);
-		contentPane.add(btnGuardar);
+		table = new JTable(modeloTabla);
+		JScrollPane scroll = new JScrollPane(table);
+		scroll.setBounds(21, 278, 583, 128);
+		contentPane.add(scroll);
 		
-		table = new JTable();
-		table.setBounds(21, 278, 351, 128);
-		contentPane.add(table);
-
+		
+		btnAnadir = new JButton("Añadir");
+		btnAnadir.setLocation(55, 235);
+		btnAnadir.setSize(86, 32);
+		getContentPane().add(btnAnadir);
+		
+		
+		btnCargar = new JButton("Cargar");
+		btnCargar.setLocation(221, 235);
+		btnCargar.setSize(91, 32);
+		getContentPane().add(btnCargar);
+		
+		btnGuardar = new JButton("Guardar");
+		btnGuardar.setLocation(415, 241);
+		btnGuardar.setSize(91, 26);
+		getContentPane().add(btnGuardar);
 	}
+
+	
+	public JTextField getTextFieldLocal() {
+		return textFieldLocal;
+	}
+
+
+	public JTextField getTextFieldVisitante() {
+		return textFieldVisitante;
+	}
+
+
+	public JTextField getTextFieldGolLocal() {
+		return textFieldGolLocal;
+	}
+
+
+	public JTextField getTextFieldGolVisitante() {
+		return textFieldGolVisitante;
+	}
+
+
+	public JTextField getTextFieldLugar() {
+		return textFieldLugar;
+	}
+
+	public JTextField getTextFieldFecha() {
+		return textFieldFecha;
+	}
+
+
+
+	public JButton getBtnAnadir() {
+		return btnAnadir;
+	}
+	public JButton getBtnCargar() {
+		return btnCargar;
+	}
+	public JButton getBtnGuardar() {
+		return btnGuardar;
+	}
+	
+	
+	public void VaciarCampos() {
+		textFieldLocal.setText("");
+		textFieldVisitante.setText("");
+		textFieldGolLocal.setText("");
+		textFieldGolVisitante.setText("");
+		textFieldLugar.setText("");
+		textFieldFecha.setText("");
+	}
+	
+	
+	public void refrescarTabla(ArrayList<Partido> partidos) {
+		modeloTabla.setRowCount(0);
+		
+		for(Partido p: partidos) {
+			Object[] row = {p.getEquipoLoc(),p.getEquipoVis(),p.getGolesLoc(),p.getGolesVis(),p.getLugar(),p.getFecha()};
+			modeloTabla.addRow(row);
+		}
+		
+	}
+	
 }
