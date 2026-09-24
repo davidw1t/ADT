@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class escrituraSecuencial {
+public class escrituraLecturaSecuencial {
 
 	
 	private static final String rutaArchivo = "src/recursos/misdatos.dat";	/*Ruta fichero*/
@@ -15,6 +15,7 @@ public class escrituraSecuencial {
 	public static void main(String[] argumentos){
 		try {
 			escribirSecuencial();
+			lecturaSecuencial();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,14 +62,17 @@ public class escrituraSecuencial {
 	
 	/**
 	 * lee secuencialmente un fichero de datos
+	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void lecturaSecuencial()  {
+	public static void lecturaSecuencial() throws IOException  {
 		
 		File fichero = new File(rutaArchivo);
 		
+		RandomAccessFile raf=null;
+		
 		try {
-			RandomAccessFile raf= new RandomAccessFile(fichero, "r");
+			raf= new RandomAccessFile(fichero, "r");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,12 +81,32 @@ public class escrituraSecuencial {
 		int id, dep, posicion;
 		
 		Double salario;
-		char apellido[]=new char[10], aux;
+		char apellido[]=new char[10];
+		char aux;
 		posicion =0;
 		
 		
+		raf.seek(posicion);
 		
-		
+		while(raf.getFilePointer()<raf.length()) {
+			id=raf.readInt();
+			
+			for (int i = 0; i < apellido.length; i++) {
+				aux=raf.readChar();
+				apellido[i]=aux;
+			}
+			
+			String apellidos=new String(apellido);
+			dep=raf.readInt();
+			salario=raf.readDouble();
+			if(id>0) {
+				System.out.printf("ID: %s, Apellido: %s, Departamento: %d, Salario: %.2f%n", id, apellidos.trim(), dep, salario);
+				
+			posicion=posicion+36;
+			
+			}
+		}
+		raf.close();
 	}
 	
 	
